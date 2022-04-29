@@ -1,0 +1,14 @@
+# In this case, the assembly/binning processes of potential genome are assumed to have been already finished.
+# This process codes provide the characteristics of genomes from the aspect of themselves and the sequencing data.
+###1-checkM
+
+
+###2-coverage examination (towards illumina sequencing data)
+SMPLNME="chromosomeBin1" # just A example
+bowtie2-build ${SMPLNME}.fasta db/${SMPLNME}
+bowtie2 -x db/${SMPLNME} -1 ../rawData/illumina/C1_R1.fastq -2 ../rawData/illumina/C1_R2.fastq -p 30 -S ${SMPLNME}_mapping.sam
+samtools view -Sb -F 0x04 ${SMPLNME}_mapping.sam > ${SMPLNME}_mapping_OneMoreLocations.bam 
+samtools index ${SMPLNME}_mapping_OneMoreLocations.bam
+samtools sort -@ 30 ${SMPLNME}_mapping_OneMoreLocations.bam -o ${SMPLNME}_mapping_OneMoreLocations.sorted
+samtools index ${SMPLNME}_mapping_OneMoreLocations.sorted.bam
+
